@@ -1,0 +1,44 @@
+@{
+    ViewData["Title"] = "Form Example";
+}
+
+@using(Html.BeginForm("FormSerializePost", "Examples", FormMethod.Post, new{ @id="frmSerialize"})){
+    @Html.Hidden("field1", "Value1")
+    @Html.Hidden("field2", "Value2")
+    @Html.Hidden("field3", "Value3")
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<p>Example of ajax post grabbing the entire form and using serialize.</p>
+
+<div>
+    <div class="btn btn-primary" id="btnPost">POST - Serialize</div>
+    <div><small class="form-text text-muted">Serialize the entire form (token included) and POST it.</small></div>
+</div>
+
+<hr />
+
+@section Scripts
+{
+    <script type="text/javascript">
+        $(function(){
+            $('#btnPost').on('click', function(){
+
+                var form = $('#frmSerialize'),
+                    actionUrl = form.attr('action'),
+                    dataToSend = form.serialize();
+
+                console.log(dataToSend);
+                
+                $.ajax({
+                    url: actionUrl,
+                    method: "post",
+                    data: dataToSend
+                }).done(function(data) {
+                    alert(data);
+                });
+            });
+        });
+    </script>
+}

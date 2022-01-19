@@ -1,0 +1,38 @@
+@{
+    ViewData["Title"] = "No Token Example";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<p>Example of ajax post with no token provided.</p>
+
+<div>
+    <div class="btn btn-primary" id="btnGet">GET</div>
+    <div><small class="form-text text-muted">AutoValidateAntiforgeryTokenAttribute will allow GET requests without tokens.  Use ValidateAntiForgeryToken for stricter rules.</small></div>
+</div>
+
+<hr />
+
+<div>
+    <div class="btn btn-primary" id="btnPost">POST</div>
+    <div><small class="form-text text-muted">Won't work, check console.</small></div>
+</div>
+
+@section Scripts
+{
+    <script type="text/javascript">
+        $(function(){
+            $('#btnGet').on('click', function(){
+                $.get('@Url.Action("NoTokenGet")', function(data){
+                    alert(data);
+                });
+            });
+
+            $('#btnPost').on('click', function(){
+                $.post('@Url.Action("NoTokenPost")', {name: "test"}, function(data){
+                    alert(data);
+                });
+            });
+        });
+    </script>
+}

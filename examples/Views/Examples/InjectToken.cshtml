@@ -1,0 +1,59 @@
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Antiforgery
+@{
+    ViewData["Title"] = "Inject Token Example";
+    var token = Antiforgery.GetAndStoreTokens(Context).RequestToken;
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<p>Example of ajax post using AspNetCore IAntiforgery because the page doesn't have a form.</p>
+
+<div>
+    <div class="btn btn-primary" id="btnPostHeader">POST - Header</div>
+    <div><small class="form-text text-muted">Use the injected token in the ajax header.</small></div>
+</div>
+
+<hr />
+
+<div>
+    <div class="btn btn-primary" id="btnPostData">POST - Data</div>
+    <div><small class="form-text text-muted">Use the injected token in the ajax data.</small></div>
+</div>
+
+<hr />
+
+<div>
+    <div class="btn btn-primary" id="btnPostNoToken">POST - No Token</div>
+    <div><small class="form-text text-muted">Won't work, check console.</small></div>
+</div>
+
+
+@section Scripts
+{
+    <script type="text/javascript">
+        $(function(){
+            $('#btnPostHeader').on('click', function(){
+                $.ajax({
+                    url: '@Url.Action("InjectTokenPostHeader")',
+                    method: "post",
+                    headers: {"RequestVerificationToken": '@token'},
+                    data: {name: "test"}
+                }).done(function(data) {
+                    alert(data);
+                });
+            });
+
+            $('#btnPostData').on('click', function(){
+                $.post('@Url.Action("InjectTokenPostData")', {name: "test", __RequestVerificationToken: '@token'}, function(data){
+                    alert(data);
+                });
+            });
+
+            $('#btnPostNoToken').on('click', function(){
+                $.post('@Url.Action("InjectTokenPostData")', {name: "test"}, function(data){
+                    alert(data);
+                });
+            });
+        });
+    </script>
+}

@@ -1,0 +1,54 @@
+﻿@page
+@model IndexModel
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery antiforgery
+@{
+    ViewData["Title"] = "Home page";
+
+    @* Option 1: Injectable token *@
+    var token = antiforgery.GetAndStoreTokens(HttpContext).RequestToken;
+}
+
+@* Option 2: Token Helper *@
+@*Html.AntiForgeryToken()*@
+
+@* Option 3: form method that automatically generates a hidden input for the token *@
+@*<form method="post"></form>*@
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
+
+@section Scripts
+{
+    <script type="text/javascript">
+        $(function(){
+
+            /* Option 1: Include the token in the header */
+            $.ajax({
+                url: '@Url.Action("TestPost")',
+                method: "post",
+                headers: {"RequestVerificationToken": $('input:hidden[name="__RequestVerificationToken"]').val()},
+                data: {name: "test"}
+            }).done(function() {
+                console.log("Post with header works");
+            });
+
+            /* Option 2: Include the token in the data */
+            $.ajax({
+                url: '@Url.Action("TestPost")',
+                method: "post",
+                data: {name: "test", __RequestVerificationToken: '@token'}
+            }).done(function() {
+                console.log("Post with token in data works");
+            });
+
+            /* Shorthand of Option 2 */
+            $.post('@Url.Action("TestPost")', {name: "test", __RequestVerificationToken: '@token'}, function(){
+                console.log("Post shorthand with token data works");
+            });
+
+
+        });
+    </script>
+}
