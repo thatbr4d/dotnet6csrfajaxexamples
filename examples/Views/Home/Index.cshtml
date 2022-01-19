@@ -2,7 +2,38 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div>
+    <h1 class="display-4">XSRF/CSRF</h1>
+    <p><a href="https://docs.microsoft.com/en-us/aspnet/core/security/anti-request-forgery?view=aspnetcore-6.0">Detailed info from Microsoft docs.</a></p>
+    <hr />
+    <p>What is a Cross-site request forgery?</p>
+    <p>Example from the link above.</p>
+    <ol>
+<li><p>A user signs into <code>www.good-banking-site.com</code> using forms authentication. The server authenticates the user and issues a response that includes an authentication cookie. The site is vulnerable to attack because it trusts any request that it receives with a valid authentication cookie.</p>
+</li>
+<li><p>The user visits a malicious site, <code>www.bad-crook-site.com</code>.</p>
+<p>The malicious site, <code>www.bad-crook-site.com</code>, contains an HTML form similar to the following example:</p>
+<pre tabindex="0" class="has-inner-focus"><code class="lang-html" data-author-content="<h1>Congratulations! You're a Winner!</h1>
+<form action=&quot;https://good-banking-site.com/api/account&quot; method=&quot;post&quot;>
+    <input type=&quot;hidden&quot; name=&quot;Transaction&quot; value=&quot;withdraw&quot; />
+    <input type=&quot;hidden&quot; name=&quot;Amount&quot; value=&quot;1000000&quot; />
+    <input type=&quot;submit&quot; value=&quot;Click to collect your prize!&quot; />
+</form>
+"><span><span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>Congratulations! You're a Winner!<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">form</span> <span class="hljs-attr">action</span>=<span class="hljs-string">"https://good-banking-site.com/api/account"</span> <span class="hljs-attr">method</span>=<span class="hljs-string">"post"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"hidden"</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"Transaction"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"withdraw"</span> /&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"hidden"</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"Amount"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"1000000"</span> /&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"submit"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"Click to collect your prize!"</span> /&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">form</span>&gt;</span>
+</span></code></pre>
+<p>Notice that the form's <code>action</code> posts to the vulnerable site, not to the malicious site. This is the "cross-site" part of CSRF.</p>
+</li>
+<li><p>The user selects the submit button. The browser makes the request and automatically includes the authentication cookie for the requested domain, <code>www.good-banking-site.com</code>.</p>
+</li>
+<li><p>The request runs on the <code>www.good-banking-site.com</code> server with the user's authentication context and can perform any action that an authenticated user is allowed to perform.</p>
+</li>
+</ol>
+
+<img src='@Url.Content("~/csrf-token-1-1024x536.png")' />
+<div><small>https://secumantra.com/csrf-attack-and-csrf-token/</small></div>
 </div>
